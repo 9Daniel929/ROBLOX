@@ -1,0 +1,48 @@
+{
+  "document": {
+    "language": "en",
+    "head": {
+      "title": "Roblox| Login",
+      "meta": [
+        { "charset": "UTF-8" },
+        { "name": "viewport", "content": "width=device-width, initial-scale=1.0" }
+      ],
+      "stylesheets": ["style.css"]
+    },
+    "body": {
+      "container": {
+        "class": "auth-container",
+        "logo": {
+          "src": "https://wikimedia.org",
+          "alt": "logo",
+          "width": 50
+        },
+        "heading": "Login to roblex",
+        "form_elements": [
+          {
+            "type": "input",
+            "id": "email-field",
+            "input_type": "email",
+            "placeholder": "Email / Username",
+            "required": true
+          },
+          {
+            "type": "input",
+            "id": "pass-field",
+            "input_type": "password",
+            "placeholder": "Password",
+            "required": true
+          }
+        ],
+        "buttons": [
+          { "id": "login-btn", "label": "Log In" },
+          { "id": "signup-btn", "label": "Sign Up" }
+        ],
+        "status_message_id": "status-msg"
+      },
+      "scripts": [
+        { "type": "module", "src": "app.js" }
+      ]
+    }
+  }
+}
