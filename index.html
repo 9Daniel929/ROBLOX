@@ -3,135 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox | Login</title>
+    <title>Roblex | Home</title>
     <style>
-        /* CSS STYLES */
         body {
-            background-color: #232527; /* Roblex Dark Theme */
+            background-color: #232527;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; margin: 0; color: white;
         }
 
-        .auth-container {
-            background-color: #393b3d;
-            padding: 30px;
-            border-radius: 8px;
-            width: 380px;
-            text-align: center;
-            color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        .container {
+            background-color: #393b3d; padding: 30px; border-radius: 8px;
+            width: 400px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        .logo { margin-bottom: 20px; filter: invert(1); }
+        /* Nav Bar */
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #191b1d; padding: 10px 20px; position: fixed;
+            top: 0; width: 100%; box-sizing: border-box;
+        }
 
-        h2 { margin-bottom: 20px; font-weight: 400; }
-
+        /* Utility */
         input {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #111;
-            border-radius: 4px;
-            background-color: #191b1d;
-            color: white;
-            box-sizing: border-box;
+            width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #111;
+            border-radius: 4px; background-color: #191b1d; color: white; box-sizing: border-box;
         }
-
         button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 15px;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 16px;
-            transition: opacity 0.2s;
+            width: 100%; padding: 12px; margin-top: 10px; border: none;
+            border-radius: 4px; font-weight: bold; cursor: pointer;
         }
+        .primary-btn { background-color: #00b2ff; color: white; }
+        .secondary-btn { background-color: transparent; border: 1px solid white; color: white; }
+        .hidden { display: none !important; }
 
-        button:hover { opacity: 0.9; }
-
-        #login-btn {
-            background-color: #00b2ff;
-            color: white;
-        }
-
-        #signup-btn {
-            background-color: transparent;
-            color: #fff;
-            border: 1px solid #fff;
-        }
-
-        .divider { margin: 15px 0; color: #bbb; font-size: 12px; }
-
-        #status-msg {
-            margin-top: 15px;
-            font-size: 14px;
-            min-height: 20px;
-        }
+        /* Dashboard Styles */
+        .friend-list { text-align: left; margin-top: 20px; border-top: 1px solid #555; padding-top: 10px; }
+        .request-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .accept-btn { background: #00e676; width: auto; padding: 4px 8px; margin: 0; font-size: 11px; }
     </style>
 </head>
 <body>
 
-    <div class="auth-container">
-        <div class="logo">
-            <img src="https://wikimedia.org" alt="logo" width="50">
+    <!-- NAV BAR (Shown when logged in) -->
+    <div id="nav" class="navbar hidden">
+        <span>Roblex</span>
+        <div>
+            <span id="user-display" style="margin-right: 15px; font-weight: bold;"></span>
+            <button id="logout-btn" style="width: auto; padding: 5px 10px; font-size: 12px; margin: 0;">Logout</button>
         </div>
-        <h2>Login to Roblox</h2>
+    </div>
+
+    <!-- AUTH SECTION (Login/Signup) -->
+    <div id="auth-section" class="container">
+        <img src="https://wikimedia.org" alt="logo" width="50" style="filter: invert(1); margin-bottom: 10px;">
+        <h2 id="auth-title">Login to Roblox</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button id="login-btn" class="primary-btn">Log In</button>
+        <button id="signup-btn" class="secondary-btn">Sign Up</button>
+        <p id="status-msg" style="font-size: 14px; color: #ff5f5f;"></p>
+    </div>
+
+    <!-- HOME/DASHBOARD SECTION -->
+    <div id="home-section" class="container hidden">
+        <h1>Welcome Home!</h1>
+        <p>This is your profile dashboard.</p>
         
-        <div class="input-group">
-            <input type="email" id="email-field" placeholder="Email / Username" required>
-            <input type="password" id="pass-field" placeholder="Password" required>
+        <div class="friend-list">
+            <h3>Friend Requests</h3>
+            <div id="request-container">
+                <!-- Requests appear here -->
+            </div>
+            <p id="no-requests" style="color: #bbb; font-size: 13px;">No new requests.</p>
         </div>
-
-        <button id="login-btn">Log In</button>
-        <div class="divider">or</div>
-        <button id="signup-btn">Sign Up</button>
-
-        <p id="status-msg"></p>
     </div>
 
     <script>
-        // JAVASCRIPT LOGIC
-        document.addEventListener('DOMContentLoaded', () => {
-            const emailInput = document.getElementById('email-field');
-            const passwordInput = document.getElementById('pass-field');
-            const loginBtn = document.getElementById('login-btn');
-            const signupBtn = document.getElementById('signup-btn');
-            const statusMsg = document.getElementById('status-msg');
+        // DOM Elements
+        const authSection = document.getElementById('auth-section');
+        const homeSection = document.getElementById('home-section');
+        const nav = document.getElementById('nav');
+        const userDisplay = document.getElementById('user-display');
+        const statusMsg = document.getElementById('status-msg');
+        const requestContainer = document.getElementById('request-container');
 
-            function showMessage(text, color) {
-                statusMsg.textContent = text;
-                statusMsg.style.color = color;
+        // Check for existing session on load
+        window.onload = () => {
+            const loggedInUser = localStorage.getItem('currentUser');
+            if (loggedInUser) showDashboard(loggedInUser);
+        };
+
+        // SIGN UP Logic
+        document.getElementById('signup-btn').onclick = () => {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            
+            if (!user || !pass) return (statusMsg.textContent = "Fill all fields!");
+
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.find(u => u.user === user)) {
+                return (statusMsg.textContent = "Username taken!");
             }
 
-            loginBtn.addEventListener('click', () => {
-                const email = emailInput.value.trim();
-                const pass = passwordInput.value.trim();
-                if (!email || !pass) {
-                    showMessage("Please enter both email and password.", "#ff5f5f");
-                } else {
-                    showMessage("Logging in...", "#00b2ff");
-                    console.log("Login attempt:", { email, pass });
-                }
-            });
+            users.push({ user, pass });
+            localStorage.setItem('users', JSON.stringify(users));
+            statusMsg.style.color = "#00e676";
+            statusMsg.textContent = "Account created! Now Log In.";
+        };
 
-            signupBtn.addEventListener('click', () => {
-                const email = emailInput.value.trim();
-                const pass = passwordInput.value.trim();
-                if (!email || !pass) {
-                    showMessage("Please fill in the fields to sign up.", "#ff5f5f");
-                } else {
-                    showMessage("Account creation started!", "#00e676");
-                    console.log("Signup attempt:", { email, pass });
-                }
+        // LOGIN Logic
+        document.getElementById('login-btn').onclick = () => {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+
+            const validUser = users.find(u => u.user === user && u.pass === pass);
+            if (validUser) {
+                localStorage.setItem('currentUser', user);
+                showDashboard(user);
+            } else {
+                statusMsg.textContent = "Invalid username or password.";
+            }
+        };
+
+        // LOGOUT Logic
+        document.getElementById('logout-btn').onclick = () => {
+            localStorage.removeItem('currentUser');
+            location.reload();
+        };
+
+        function showDashboard(username) {
+            authSection.classList.add('hidden');
+            homeSection.classList.remove('hidden');
+            nav.classList.remove('hidden');
+            userDisplay.textContent = username;
+            loadFriendRequests();
+        }
+
+        // FRIEND REQUEST Logic (Simulated)
+        function loadFriendRequests() {
+            const mockRequests = ["Builderman", "Stickmasterluke", "Guest 666"];
+            document.getElementById('no-requests').classList.add('hidden');
+            
+            mockRequests.forEach(name => {
+                const div = document.createElement('div');
+                div.className = 'request-item';
+                div.innerHTML = `
+                    <span>${name}</span>
+                    <button class="accept-btn" onclick="this.parentElement.remove()">Accept</button>
+                `;
+                requestContainer.appendChild(div);
             });
-        });
+        }
     </script>
 </body>
 </html>
-
