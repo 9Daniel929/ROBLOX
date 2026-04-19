@@ -1,4 +1,4 @@
-let scene, camera, renderer, head, torso, is3DStarted = false;
+let scene, camera, renderer, head, torso, is3DActive = false;
 let currentUser = null;
 
 // --- AUTH ---
@@ -6,11 +6,10 @@ document.getElementById('signup-btn').onclick = () => {
     const u = document.getElementById('username').value;
     const p = document.getElementById('password').value;
     let users = JSON.parse(localStorage.getItem('users') || "[]");
-    if (users.find(x => x.username === u)) return alert("Taken!");
+    if(users.find(x => x.username === u)) return alert("User exists!");
     users.push({ username: u, password: p, balance: 0, inventory: [] });
     localStorage.setItem('users', JSON.stringify(users));
-    document.getElementById('status-msg').style.color = "#00e676";
-    document.getElementById('status-msg').innerText = "Account Created!";
+    alert("Signed up! Now Login.");
 };
 
 document.getElementById('login-btn').onclick = () => {
@@ -18,7 +17,7 @@ document.getElementById('login-btn').onclick = () => {
     const p = document.getElementById('password').value;
     const users = JSON.parse(localStorage.getItem('users') || "[]");
     const user = users.find(x => x.username === u && x.password === p);
-    if (user) {
+    if(user) {
         currentUser = user;
         document.getElementById('auth-section').classList.add('hidden');
         document.getElementById('nav').classList.remove('hidden');
@@ -26,27 +25,22 @@ document.getElementById('login-btn').onclick = () => {
         document.getElementById('user-display').innerText = user.username;
         document.getElementById('balance-display').innerText = "R$: " + user.balance;
         showTab('home');
-    } else alert("Invalid Login!");
+    } else alert("Fail!");
 };
 
-// --- NAVIGATION ---
+// --- NAVIGATION & 3D FIX ---
 function showTab(tabId) {
     document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
     document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + tabId).classList.remove('hidden');
-    
-    // Highlight active side button
-    const btns = document.querySelectorAll('.side-btn');
-    btns.forEach(btn => { if(btn.innerText.toLowerCase() === tabId) btn.classList.add('active'); });
 
-    if (tabId === 'avatar' && !is3DStarted) {
-        setTimeout(init3D, 150);
+    if (tabId === 'avatar' && !is3DActive) {
+        setTimeout(init3D, 200); // Wait for CSS to render container
     }
 }
 
-// --- 3D SYSTEM ---
 function init3D() {
-    is3DStarted = true;
+    is3DActive = true;
     const container = document.getElementById('avatar-3d-container');
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
@@ -62,8 +56,8 @@ function init3D() {
     torso = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.5, 0.6), new THREE.MeshLambertMaterial({ color: 0x00b2ff }));
     scene.add(torso);
 
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(2, 2, 5);
+    const light = new THREE.PointLight(0xffffff, 1, 100);
+    light.position.set(5, 5, 5);
     scene.add(light, new THREE.AmbientLight(0x404040));
     camera.position.z = 4;
 
@@ -78,17 +72,18 @@ function init3D() {
 
 function changeColor(hex) { if(head) head.material.color.setHex(hex); }
 
-// --- SEARCH & MONEY ---
+// --- SEARCH & PAYMENT FIXES ---
 document.getElementById('search-btn').onclick = () => {
     const q = document.getElementById('search-input').value.toLowerCase();
     const users = JSON.parse(localStorage.getItem('users') || "[]");
     const found = users.find(u => u.username.toLowerCase() === q);
-    if (found) {
+    if(found) {
         document.getElementById('search-results').classList.remove('hidden');
         document.getElementById('found-name').innerText = "Found: " + found.username;
-    } else alert("Not found!");
+    } else alert("Not Found");
 };
 
+// Modal Buttons
 document.getElementById('buy-roblex-btn').onclick = () => document.getElementById('pay-modal').classList.remove('hidden');
 document.getElementById('close-modal').onclick = () => document.getElementById('pay-modal').classList.add('hidden');
 
@@ -102,12 +97,12 @@ document.getElementById('confirm-pay').onclick = () => {
 };
 
 function buyItem(name, price) {
-    if(currentUser.balance < price) return alert("Not enough R$!");
+    if(currentUser.balance < price) return alert("Poor!");
     currentUser.balance -= price;
     currentUser.inventory.push(name);
     document.getElementById('balance-display').innerText = "R$: " + currentUser.balance;
     saveData();
-    alert("Purchased " + name);
+    alert("Got it!");
 }
 
 function saveData() {
