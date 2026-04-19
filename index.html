@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roblex | Home</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cloudflare.com"></script>
 </head>
 <body>
 
-    <!-- NAV BAR (Top original style) -->
     <div id="nav" class="navbar hidden">
         <span>Roblex</span>
         <div>
@@ -19,9 +17,7 @@
         </div>
     </div>
 
-    <!-- MAIN WRAPPER FOR SIDEBAR + CONTENT -->
     <div class="wrapper">
-        <!-- SIDEBAR (Matches original theme) -->
         <div id="sidebar" class="sidebar hidden">
             <button class="side-btn active" onclick="showTab('home')">Home</button>
             <button class="side-btn" onclick="showTab('games')">Games</button>
@@ -31,37 +27,29 @@
         </div>
 
         <div class="content-area">
-            <!-- AUTH SECTION -->
+            <!-- AUTH -->
             <div id="auth-section" class="container">
-                <img src="https://wikimedia.org" alt="logo" width="50" style="filter: invert(1); margin-bottom: 10px;">
                 <h2 id="auth-title">Login to Roblex</h2>
                 <input type="text" id="username" placeholder="Username">
                 <input type="password" id="password" placeholder="Password">
                 <button id="login-btn" class="primary-btn">Log In</button>
                 <button id="signup-btn" class="secondary-btn">Sign Up</button>
-                <p id="status-msg" style="font-size: 14px; color: #ff5f5f;"></p>
+                <p id="status-msg"></p>
             </div>
 
-            <!-- HOME TAB -->
             <div id="tab-home" class="container hidden">
                 <h1>Find Users</h1>
                 <input type="text" id="search-input" placeholder="Search username...">
                 <button id="search-btn" class="primary-btn">Search</button>
                 <div id="search-results" class="results-box hidden">
                     <p id="found-name"></p>
-                    <button class="primary-btn" style="width: auto; padding: 5px 15px;">Add Friend</button>
+                    <button class="primary-btn" style="width:auto; padding:5px 10px;">Add Friend</button>
                 </div>
             </div>
 
-            <!-- GAMES TAB -->
-            <div id="tab-games" class="container hidden">
-                <h1>Games</h1>
-                <p style="color: #bbb;">No games yet. Tell me what to build!</p>
-            </div>
-
-            <!-- AVATAR TAB -->
             <div id="tab-avatar" class="container hidden">
                 <h1>Avatar Editor</h1>
+                <!-- 3D Viewport -->
                 <div id="avatar-3d-container"></div>
                 <h3>Skin Tone</h3>
                 <div class="color-row">
@@ -71,32 +59,28 @@
                 </div>
             </div>
 
-            <!-- MARKETPLACE TAB -->
             <div id="tab-marketplace" class="container hidden">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
-                    <h1 style="margin:0;">Market</h1>
-                    <button id="buy-roblex-btn" class="primary-btn" style="width:auto; padding: 10px;">+ Buy Roblex</button>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h1>Market</h1>
+                    <button id="buy-roblex-btn" class="primary-btn" style="width:auto; padding:10px;">+ Buy Roblex</button>
                 </div>
                 <div class="shop-grid">
                     <div class="item-card">
-                        <span style="font-size: 40px;">🎩</span>
+                        <span style="font-size:30px;">🎩</span>
                         <p>Classic Hat</p>
                         <button onclick="buyItem('Top Hat', 100)" class="primary-btn">100 R$</button>
                     </div>
                 </div>
             </div>
-
-            <!-- INVENTORY TAB -->
-            <div id="tab-inventory" class="container hidden">
-                <h1>My Inventory</h1>
-                <div id="inventory-list" class="shop-grid"></div>
-            </div>
+            
+            <div id="tab-games" class="container hidden"><h1>Games Coming Soon</h1></div>
+            <div id="tab-inventory" class="container hidden"><h1>Your Items</h1><div id="inventory-list"></div></div>
         </div>
     </div>
 
-    <!-- PAYMENT MODAL -->
+    <!-- PAYMENT MODAL (Fixed visibility) -->
     <div id="pay-modal" class="modal hidden">
-        <div class="container" style="max-width: 350px;">
+        <div class="modal-content">
             <h2>Purchase Roblex</h2>
             <select id="pay-amount">
                 <option value="100">100 R$ - $0.99</option>
